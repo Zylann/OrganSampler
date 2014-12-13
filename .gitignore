@@ -21,3 +21,6 @@ gui/*
 
 Icon?
 .DS_Stor*
+
+# Samples data
+Banks/
