@@ -80,7 +80,7 @@ private:
 	void CreateOrganControls(const OrganInfo & info);
 	void ClearOrganControls();
 
-	void updateStatusText();
+	void updateStatusText(int remainingLoads);
 
 	void processVirtualKeyboard();
 

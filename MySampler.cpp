@@ -182,7 +182,12 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 {
 	// Mutex is already locked for us.
 
-	updateStatusText();
+	// Update data loading
+	if(m_voiceManager.organData.isLoading())
+	{
+		int remaining = m_voiceManager.organData.loadNext();
+		updateStatusText(remaining);
+	}
 
 	double *leftOutput = outputs[0];
 	double *rightOutput = outputs[1];
@@ -199,15 +204,14 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 }
 
 //-----------------------------------------------------------------------------
-void MySampler::updateStatusText()
+void MySampler::updateStatusText(int remainingLoads)
 {
 	if(m_voiceManager.organData.isLoading())
 	{
-		int remaining = m_voiceManager.organData.loadNext();
 		unsigned int memoryUseMo = m_voiceManager.organData.getMemoryUse() / 1000000;
 		std::stringstream ss;
-		if(remaining >= 0)
-			ss << "Loading samples (" << remaining << ")... ";
+		if(remainingLoads >= 0)
+			ss << "Loading samples (" << remainingLoads << ")... ";
 		else
 			ss << "Ready ";
 		ss << "[" << memoryUseMo << " Mo]";
