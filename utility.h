@@ -35,6 +35,11 @@ inline void normalizePath(std::string & str)
 	}
 }
 
+inline bool isEOL(char c)
+{
+	return c == '\n' || c == '\r';
+}
+
 
 #endif // __HEADER_UTILITY__
 

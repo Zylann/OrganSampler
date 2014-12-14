@@ -5,11 +5,7 @@
 #include <sstream>
 #include <iostream>
 
-inline bool isEOL(char c)
-{
-	return c == '\n' || c == '\r';
-}
-
+//-----------------------------------------------------------------------------
 void nextLine(std::istream & is)
 {
 	char last_c = 0;
@@ -25,6 +21,7 @@ void nextLine(std::istream & is)
 	}
 }
 
+//-----------------------------------------------------------------------------
 std::string getUntil(std::istream & is, std::string delims)
 {
 	std::string str;
@@ -39,11 +36,13 @@ std::string getUntil(std::istream & is, std::string delims)
 	return str;
 }
 
+//-----------------------------------------------------------------------------
 void OrganInfo::clear()
 {
 	m_stops.clear();
 }
 
+//-----------------------------------------------------------------------------
 bool OrganInfo::loadFromFile(const char * filePath)
 {
 	clear();
