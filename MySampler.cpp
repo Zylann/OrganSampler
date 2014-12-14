@@ -182,13 +182,7 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 {
 	// Mutex is already locked for us.
 
-	if(m_voiceManager.organData.isLoading())
-	{
-		int remaining = m_voiceManager.organData.loadNext();
-		std::stringstream ss;
-		ss << remaining;
-		Print(ss.str());
-	}
+	updateStatusText();
 
 	double *leftOutput = outputs[0];
 	double *rightOutput = outputs[1];
@@ -202,6 +196,23 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	}
 
 	m_midiReceiver.flush(nFrames);
+}
+
+//-----------------------------------------------------------------------------
+void MySampler::updateStatusText()
+{
+	if(m_voiceManager.organData.isLoading())
+	{
+		int remaining = m_voiceManager.organData.loadNext();
+		unsigned int memoryUseMo = m_voiceManager.organData.getMemoryUse() / 1000000;
+		std::stringstream ss;
+		if(remaining >= 0)
+			ss << "Loading samples (" << remaining << ")... ";
+		else
+			ss << "Ready ";
+		ss << "[" << memoryUseMo << " Mo]";
+		Print(ss.str());
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -225,14 +236,28 @@ void MySampler::OnParamChange(int paramIdx)
 		{
 			bool active = GetParam(paramIdx)->Bool();
 
-			if(!m_voiceManager.organData.hasStop(stopIndex))
-			{
-				std::vector<OrganStopInfo> stops;
-				stops.push_back(m_organInfo.getStop(stopIndex));
+			OrganData & organData = m_voiceManager.organData;
 
-				std::string organPath = m_organInfo.getFilePath();
-				std::string organDir = organPath.substr(0, organPath.rfind('/'));
-				m_voiceManager.organData.loadStopsData(organDir, stops);
+			if(!organData.hasStop(stopIndex))
+			{
+				// Start loading if not already done
+				if(!organData.isLoadingStop(stopIndex))
+				{
+					std::vector<OrganStopInfo> stops;
+					stops.push_back(m_organInfo.getStop(stopIndex));
+
+					std::string organPath = m_organInfo.getFilePath();
+					std::string organDir = organPath.substr(0, organPath.rfind('/'));
+					organData.loadStopsData(organDir, stops);
+				}
+			}
+
+			if(organData.hasStop(stopIndex))
+			{
+				// Set active flag
+				// Note: stopData should always exist because it is created above
+				OrganStopData & stopData = organData.getStop(stopIndex);
+				stopData.enabled = active;
 			}
 		}
 	}

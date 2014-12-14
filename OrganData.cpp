@@ -1,4 +1,5 @@
 #include "OrganData.h"
+#include <assert.h>
 
 //-----------------------------------------------------------------------------
 OrganData::~OrganData()
@@ -28,6 +29,13 @@ void OrganData::loadStopsData(const std::string & top, const std::vector<OrganSt
 
 		if(!hasStop(stopID))
 		{
+			// Ensure the stop data struct is created now
+			if(m_stops.size() <= stopID)
+				m_stops.resize(stopID+1, 0);
+			assert(m_stops[stopID] == 0);
+			m_stops[stopID] = new OrganStopData();
+
+			// Schedule note files loading
 			for(unsigned int j = 0; j < stops[i].noteFiles.size(); ++j)
 			{
 				LoadEntry e;
@@ -41,6 +49,17 @@ void OrganData::loadStopsData(const std::string & top, const std::vector<OrganSt
 }
 
 //-----------------------------------------------------------------------------
+bool OrganData::isLoadingStop(unsigned int stopID)
+{
+	for(unsigned int i = 0; i < m_loadQueue.size(); ++i)
+	{
+		if(m_loadQueue[i].stopID == stopID)
+			return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 int OrganData::loadNext()
 {
 	if(m_loadQueue.empty())
@@ -50,8 +69,10 @@ int OrganData::loadNext()
 	m_loadQueue.pop_back();
 
 	if(m_stops.size() <= e.stopID)
-	{
 		m_stops.resize(e.stopID+1, 0);
+
+	if(m_stops[e.stopID] == 0)
+	{
 		OrganStopData * stopData = new OrganStopData();
 		m_stops[e.stopID] = stopData;
 	}
@@ -96,7 +117,7 @@ std::vector<const WaveFile*> OrganData::getNoteDatas(int note) const
 		if(m_stops[i])
 		{
 			const OrganStopData & stopData = *m_stops[i];
-			if(stopData.hasNote(note))
+			if(stopData.enabled && stopData.hasNote(note))
 			{
 				notes.push_back(&stopData.getNoteBuffer(note));
 			}
@@ -104,5 +125,24 @@ std::vector<const WaveFile*> OrganData::getNoteDatas(int note) const
 	}
 
 	return notes;
+}
+
+//-----------------------------------------------------------------------------
+unsigned int OrganData::getMemoryUse() const
+{
+	unsigned int sum = 0;
+	for(unsigned int i = 0; i < m_stops.size(); ++i)
+	{
+		if(m_stops[i])
+		{
+			const OrganStopData & stopData = *m_stops[i];
+			for(unsigned int j = 0; j < stopData.m_notes.size(); ++j)
+			{
+				if(stopData.m_notes[j])
+					sum += stopData.m_notes[j]->getMemoryUse();
+			}
+		}
+	}
+	return sum;
 }
 

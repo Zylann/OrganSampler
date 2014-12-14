@@ -11,6 +11,10 @@ class OrganData;
 class OrganStopData
 {
 public:
+	OrganStopData():
+		enabled(false)
+	{}
+
 	~OrganStopData()
 	{
 		for(unsigned int i = 0; i < m_notes.size(); ++i)
@@ -19,6 +23,8 @@ public:
 
 	inline bool hasNote(int i) const { return i >= 0 && i < m_notes.size() && m_notes[i] != 0; }
 	inline const WaveFile & getNoteBuffer(int i) const { return *m_notes[i]; }
+
+	bool enabled;
 
 private:
 	friend class OrganData;
@@ -38,11 +44,14 @@ public:
 	void clear();
 	
 	inline bool isLoading() const { return !m_loadQueue.empty(); }
+	bool isLoadingStop(unsigned int stopID);
 
 	std::vector<const WaveFile*> getNoteDatas(int note) const;
 
-	inline bool hasStop(unsigned int stopID) const { return stopID < m_stops.size(); }
-	inline const OrganStopData & getStop(unsigned int stopID) const { return *m_stops[stopID]; }
+	inline bool hasStop(unsigned int stopID) const { return stopID < m_stops.size() && m_stops[stopID] != 0; }
+	inline OrganStopData & getStop(unsigned int stopID) { return *m_stops[stopID]; }
+
+	unsigned int getMemoryUse() const;
 
 private:
 	std::vector< OrganStopData* > m_stops; // [stopID][note] => buffer

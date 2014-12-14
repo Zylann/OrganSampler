@@ -80,6 +80,8 @@ private:
 	void CreateOrganControls(const OrganInfo & info);
 	void ClearOrganControls();
 
+	void updateStatusText();
+
 	void processVirtualKeyboard();
 
 	OrganInfo m_organInfo;

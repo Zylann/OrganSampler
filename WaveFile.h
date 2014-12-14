@@ -94,6 +94,8 @@ public:
 	void add(const WaveFile & other);
 	void multiply(double k);
 
+	unsigned int getMemoryUse() const;
+
 private:
 	short * m_samples;
 	std::vector<WaveCue> m_cues; // [order] => position

@@ -222,3 +222,8 @@ void WaveFile::multiply(double k)
 	}
 }
 
+unsigned int WaveFile::getMemoryUse() const
+{
+	return m_size * sizeof(short) + m_cues.size() * sizeof(WaveCue) + sizeof(m_sampleInfo);
+}
+
