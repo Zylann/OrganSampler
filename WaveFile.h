@@ -6,6 +6,7 @@
 
 #define MAX_SHORT_D 32768.0
 
+//-----------------------------------------------------------------------------
 struct WaveCue
 {
 	WaveCue():
@@ -20,6 +21,7 @@ struct WaveCue
 	std::string chunkID;
 };
 
+//-----------------------------------------------------------------------------
 struct WaveSampleLoop
 {
 	WaveSampleLoop()
@@ -35,6 +37,7 @@ struct WaveSampleLoop
 	unsigned int loopPlayCount;
 };
 
+//-----------------------------------------------------------------------------
 struct WaveSampleInfo
 {
 	WaveSampleInfo()
@@ -54,6 +57,7 @@ struct WaveSampleInfo
 	std::vector<WaveSampleLoop> loops;
 };
 
+//-----------------------------------------------------------------------------
 class WaveFile
 {
 public:

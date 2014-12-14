@@ -3,6 +3,7 @@
 #include "utility.h"
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 T readData(std::istream & is)
 {
@@ -11,7 +12,7 @@ T readData(std::istream & is)
 	return i;
 }
 
-
+//-----------------------------------------------------------------------------
 bool WaveFile::loadFromFile(const char * filePath)
 {
 	clear();
@@ -200,6 +201,7 @@ bool WaveFile::loadFromFile(const char * filePath)
 	return true;
 }
 
+//-----------------------------------------------------------------------------
 void WaveFile::add(const WaveFile & other)
 {
 	unsigned int len = std::min(m_size, other.m_size);
@@ -213,6 +215,7 @@ void WaveFile::add(const WaveFile & other)
 	}
 }
 
+//-----------------------------------------------------------------------------
 void WaveFile::multiply(double k)
 {
 	for(unsigned int i = 0; i < m_size; ++i)
@@ -223,6 +226,7 @@ void WaveFile::multiply(double k)
 	}
 }
 
+//-----------------------------------------------------------------------------
 unsigned int WaveFile::getMemoryUse() const
 {
 	return m_size * sizeof(short) + m_cues.size() * sizeof(WaveCue) + sizeof(m_sampleInfo);
