@@ -4,6 +4,8 @@
 #include <map>
 #include <vector>
 
+#define MAX_SHORT_D 32768.0
+
 struct WaveCue
 {
 	WaveCue():
@@ -79,7 +81,7 @@ public:
 	inline unsigned int size() const { return m_size; }
 	inline short operator[](unsigned int i) const { return m_samples[i]; }
 
-	inline double getAsDouble(unsigned int i) const { return static_cast<double>(m_samples[i]) / 32768.0; }
+	inline double getAsDouble(unsigned int i) const { return static_cast<double>(m_samples[i]) / MAX_SHORT_D; }
 	//{
 	//	short s = m_samples[i];
 	//	return static_cast<double>(s) / 16384.0;

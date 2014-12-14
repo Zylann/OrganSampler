@@ -218,7 +218,8 @@ void WaveFile::multiply(double k)
 	for(unsigned int i = 0; i < m_size; ++i)
 	{
 		double s = m_samples[i];
-		m_samples[i] = static_cast<short>(s * k);
+		s = clamp(s, -MAX_SHORT_D, MAX_SHORT_D);
+		m_samples[i] = static_cast<short>(s);
 	}
 }
 
