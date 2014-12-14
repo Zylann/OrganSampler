@@ -42,6 +42,7 @@ void OrganData::loadStopsData(const std::string & top, const std::vector<OrganSt
 				e.filePath = top + "/" + stops[i].noteFiles[j];
 				e.stopID = stopID;
 				e.note = j;
+				e.amplitudeLevel = static_cast<double>(stops[i].amplitudeLevel) / 100.0;
 				m_loadQueue.push_back(e);
 			}
 		}
@@ -93,6 +94,7 @@ int OrganData::loadNext()
 			delete notes[note];
 		}
 
+		wave->multiply(e.amplitudeLevel);
 		notes[note] = wave;
 	}
 	else

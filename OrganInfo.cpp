@@ -62,6 +62,7 @@ bool OrganInfo::loadFromFile(const char * filePath)
 	SectionMap sections;
 	std::string sectionName;
 
+	// Parse file
 	while(!ifs.eof())
 	{
 		char c = ifs.peek();
@@ -91,8 +92,10 @@ bool OrganInfo::loadFromFile(const char * filePath)
 
 	ifs.close();
 
+	// Interpret data
 	for(SectionMap::iterator it = sections.begin(); it != sections.end(); ++it)
 	{
+		// If the section contains stop info
 		if(it->first.find("Stop") == 0)
 		{
 			Section & section = it->second;
@@ -100,6 +103,10 @@ bool OrganInfo::loadFromFile(const char * filePath)
 
 			organStop.name = section["Name"];
 
+			// TODO Handle AmplitudeLevel (0-100)
+			organStop.amplitudeLevel = atoi(section["AmplitudeLevel"].c_str());
+
+			// Find notes (= pipes)
 			for(Section::iterator it2 = section.begin(); it2 != section.end(); ++it2)
 			{
 				size_t findPos = it2->first.find("Pipe");

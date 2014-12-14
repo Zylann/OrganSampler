@@ -10,6 +10,7 @@ struct OrganStopInfo
 {
 	unsigned int ID;
 	std::string name;
+	int amplitudeLevel;
 	std::vector<std::string> noteFiles;
 };
 

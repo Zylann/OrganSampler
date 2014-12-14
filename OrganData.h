@@ -60,6 +60,7 @@ private:
 	{
 		unsigned int stopID;
 		unsigned int note;
+		double amplitudeLevel;
 		std::string filePath;
 	};
 	std::vector<LoadEntry> m_loadQueue;
