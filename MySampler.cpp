@@ -80,7 +80,7 @@ void MySampler::CreateGraphics()
 	// State info
 	IText text;
 	text.mColor = IColor(255,255,255,64);
-	m_textControl = new ITextControl(this, IRECT(112,10,507,29), &text, "<State info>");
+	m_textControl = new ITextControl(this, IRECT(112,12,507,31), &text, "<State info>");
 	m_graphics->AttachControl(m_textControl);
 
 	// File selector
