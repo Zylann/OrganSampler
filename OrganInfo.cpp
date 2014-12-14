@@ -101,7 +101,7 @@ bool OrganInfo::loadFromFile(const char * filePath)
 			Section & section = it->second;
 			OrganStopInfo organStop;
 
-			organStop.name = section["Name"];
+			organStop.name = trim(section["Name"]);
 
 			// TODO Handle AmplitudeLevel (0-100)
 			organStop.amplitudeLevel = atoi(section["AmplitudeLevel"].c_str());

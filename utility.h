@@ -40,6 +40,42 @@ inline bool isEOL(char c)
 	return c == '\n' || c == '\r';
 }
 
+inline std::string trimRight(std::string str, const std::string chars)
+{
+	std::size_t found = str.find_last_not_of(chars);
+	if (found != std::string::npos)
+		str.erase(found+1);
+	else
+		str.clear(); // str is all whitespace
+	return str;
+}
+
+inline std::string trimLeft(std::string str, const std::string chars)
+{
+	std::size_t found = str.find_first_not_of(chars);
+	if (found != std::string::npos)
+		str.erase(0, found);
+	else
+		str.clear(); // str is all whitespace
+	return str;
+}
+
+inline std::string trim(std::string str, const std::string chars=" ")
+{
+	return trimLeft(trimRight(str, chars), chars);
+}
+
+inline std::string replace(const std::string & str, char c, char newC)
+{
+	std::string s = str;
+	for(unsigned int i = 0; i < str.size(); ++i)
+	{
+		if(s[i] == c)
+			s[i] = newC;
+	}
+	return s;
+}
+
 
 #endif // __HEADER_UTILITY__
 

@@ -100,19 +100,36 @@ void MySampler::CreateOrganControls(const OrganInfo & info)
 	// Note: bitmaps are cached so it won't be reloaded twice
 	IBitmap buttonImage = m_graphics->LoadIBitmap(BUTTON_ORGAN_STOP_ID, BUTTON_ORGAN_STOP_FN, 2);
 
+	IText textStyle;
+	textStyle.mColor = IColor(255,192,192,192);
+	textStyle.mAlign = IText::kAlignNear;
+
 	int x = kStopsBeginX;
 	int y = kStopsBeginY;
 
 	for(unsigned int i = 0; i < info.getStopCount() && i <= kParamStopsEnd; ++i)
 	{
 		const OrganStopInfo & stp = info.getStop(i);
+		int paramIdx = kParamStopsBegin + i;
 
 		StopControl stopControl;
-		int paramIdx = kParamStopsBegin + i;
+
+		// Button
 		stopControl.button = new ISwitchControl(this, x, y, paramIdx, &buttonImage);
 		m_graphics->AttachControl(stopControl.button);
+
+		// Text
+		int textX = x + buttonImage.W + 4;
+		int textY = y + 4;
+		stopControl.text = new ITextControl(this,
+			IRECT(textX, textY, textX+kStopsColumnWidth-4, textY+buttonImage.H-4),
+			&textStyle, stp.name.c_str()
+		);
+		m_graphics->AttachControl(stopControl.text);
+
 		m_stopControls.push_back(stopControl);
 
+		// Advance to the next position
 		int frameH = buttonImage.H / buttonImage.N;
 		y += frameH + 4;
 		if(y > kStopsMaxY - frameH)
@@ -135,6 +152,7 @@ void MySampler::ClearOrganControls()
 	{
 		StopControl & sc = m_stopControls[i];
 		m_graphics->DeleteControl(sc.button, true);
+		m_graphics->DeleteControl(sc.text, true);
 	}
 	m_stopControls.clear();
 }

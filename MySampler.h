@@ -38,6 +38,7 @@ enum ELayout
 struct StopControl
 {
 	ISwitchControl * button;
+	ITextControl * text;
 };
 
 class MySampler : public IPlug
