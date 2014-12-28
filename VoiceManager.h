@@ -2,7 +2,8 @@
 #define __HEADER_VOICE_MANAGER__
 
 #include "Voice.h"
-#include "OrganData.h"
+//#include "OrganData.h"
+#include "Instrument.h"
 
 class VoiceManager
 {
@@ -16,7 +17,7 @@ public:
 
 	void reset();
 
-	OrganData organData;
+	Instrument instrument;
 
 private:
 	//static const unsigned int NOTE_COUNT = 256;

@@ -3,6 +3,7 @@
 
 #include "MIDIReceiver.h"
 #include "VoiceManager.h"
+//#include "InstrumentInfo.h"
 
 //-----------------------------------------------------------------------------
 enum EParams
@@ -35,7 +36,7 @@ enum ELayout
 	//kKnobFrames = 60
 };
 
-struct StopControl
+struct SectionControl
 {
 	ISwitchControl * button;
 	ITextControl * text;
@@ -54,7 +55,7 @@ public:
 	// to receive MIDI messages:
 	void ProcessMidiMsg(IMidiMsg* pMsg);
 
-	void LoadOrgan(const char * organFilePath);
+	void LoadInstrument(const char * instrumentFilePath);
 
 	// Debug
 	void Print(const std::string & str);
@@ -78,14 +79,15 @@ private:
 	void CreateGraphics();
 	void CreatePresets();
 	
-	void CreateOrganControls(const OrganInfo & info);
-	void ClearOrganControls();
+	void CreateInstrumentControls(const InstrumentInfo & info);
+	void ClearInstrumentControls();
 
 	void updateStatusText(int remainingLoads);
 
 	void processVirtualKeyboard();
 
-	OrganInfo m_organInfo;
+	InstrumentInfo m_instrumentInfo;
+	//OrganInfo m_organInfo;
 
 	MIDIReceiver m_midiReceiver;
 	VoiceManager m_voiceManager;
@@ -95,7 +97,7 @@ private:
 	ITextControl * m_textControl;
 	IControl* m_virtualKeyboard;
 	IFileSelectorControl* m_fileSelector;
-	std::vector<StopControl> m_stopControls;
+	std::vector<SectionControl> m_sectionControls;
 
 	//double m_frequency;
 };

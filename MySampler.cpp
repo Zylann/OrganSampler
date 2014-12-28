@@ -9,7 +9,7 @@
 #include <sstream>
 
 #include "WaveFile.h"
-#include "OrganInfo.h"
+#include "InstrumentInfo.h"
 
 const int kNumPrograms = 4;
 
@@ -86,7 +86,7 @@ void MySampler::CreateGraphics()
 	// File selector
 	IBitmap openBankImage = m_graphics->LoadIBitmap(BUTTON_OPEN_BANK_ID, BUTTON_OPEN_BANK_FN);
 	GetParam(kParamDummySelectedFile)->InitDouble("SelectedFile", 50., 0., 100.0, 0.01, "%");
-	m_fileSelector = new IFileSelectorControl(this, IRECT(10,10,100,30), kParamDummySelectedFile, &openBankImage, kFileOpen, "", "organ");
+	m_fileSelector = new IFileSelectorControl(this, IRECT(10,10,100,30), kParamDummySelectedFile, &openBankImage, kFileOpen, "", "json organ");
 	m_graphics->AttachControl(m_fileSelector);
 
 	//IBitmap buttonImage = m_graphics->LoadIBitmap(BUTTON_ORGAN_STOP_ID, BUTTON_ORGAN_STOP_FN, 2);
@@ -95,7 +95,7 @@ void MySampler::CreateGraphics()
 }
 
 //-----------------------------------------------------------------------------
-void MySampler::CreateOrganControls(const OrganInfo & info)
+void MySampler::CreateInstrumentControls(const InstrumentInfo & info)
 {
 	// Note: bitmaps are cached so it won't be reloaded twice
 	IBitmap buttonImage = m_graphics->LoadIBitmap(BUTTON_ORGAN_STOP_ID, BUTTON_ORGAN_STOP_FN, 2);
@@ -107,27 +107,27 @@ void MySampler::CreateOrganControls(const OrganInfo & info)
 	int x = kStopsBeginX;
 	int y = kStopsBeginY;
 
-	for(unsigned int i = 0; i < info.getStopCount() && i <= kParamStopsEnd; ++i)
+	for(unsigned int i = 0; i < info.sections.size() && i <= kParamStopsEnd; ++i)
 	{
-		const OrganStopInfo & stp = info.getStop(i);
+		const InstrumentSectionInfo & sectionInfo = info.sections[i];
 		int paramIdx = kParamStopsBegin + i;
 
-		StopControl stopControl;
+		SectionControl sectionControl;
 
 		// Button
-		stopControl.button = new ISwitchControl(this, x, y, paramIdx, &buttonImage);
-		m_graphics->AttachControl(stopControl.button);
+		sectionControl.button = new ISwitchControl(this, x, y, paramIdx, &buttonImage);
+		m_graphics->AttachControl(sectionControl.button);
 
 		// Text
 		int textX = x + buttonImage.W + 4;
 		int textY = y + 4;
-		stopControl.text = new ITextControl(this,
+		sectionControl.text = new ITextControl(this,
 			IRECT(textX, textY, textX+kStopsColumnWidth-4, textY+buttonImage.H-4),
-			&textStyle, stp.name.c_str()
+			&textStyle, sectionInfo.name.c_str()
 		);
-		m_graphics->AttachControl(stopControl.text);
+		m_graphics->AttachControl(sectionControl.text);
 
-		m_stopControls.push_back(stopControl);
+		m_sectionControls.push_back(sectionControl);
 
 		// Advance to the next position
 		int frameH = buttonImage.H / buttonImage.N;
@@ -146,15 +146,15 @@ void MySampler::CreateOrganControls(const OrganInfo & info)
 }
 
 //-----------------------------------------------------------------------------
-void MySampler::ClearOrganControls()
+void MySampler::ClearInstrumentControls()
 {
-	for(unsigned int i = 0; i < m_stopControls.size(); ++i)
+	for(unsigned int i = 0; i < m_sectionControls.size(); ++i)
 	{
-		StopControl & sc = m_stopControls[i];
+		SectionControl & sc = m_sectionControls[i];
 		m_graphics->DeleteControl(sc.button, true);
 		m_graphics->DeleteControl(sc.text, true);
 	}
-	m_stopControls.clear();
+	m_sectionControls.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -175,16 +175,21 @@ void MySampler::Print(const std::string & str)
 }
 
 //-----------------------------------------------------------------------------
-void MySampler::LoadOrgan(const char * organFilePath)
+void MySampler::LoadInstrument(const char * instrumentFilePath)
 {
-	std::string organPath = organFilePath;
+	std::string organPath = instrumentFilePath;
 	normalizePath(organPath);
 
-	ClearOrganControls();
+	ClearInstrumentControls();
 
-	if(m_organInfo.loadFromFile(organPath.c_str()))
+	std::string errorMsg;
+	if(m_instrumentInfo.loadFromFile(organPath.c_str(), &errorMsg))
 	{
-		CreateOrganControls(m_organInfo);
+		CreateInstrumentControls(m_instrumentInfo);
+	}
+	else
+	{
+		Print("Error: " + errorMsg);
 	}
 }
 
@@ -201,9 +206,9 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	// Mutex is already locked for us.
 
 	// Update data loading
-	if(m_voiceManager.organData.isLoading())
+	if(m_voiceManager.instrument.isLoading())
 	{
-		int remaining = m_voiceManager.organData.loadNext();
+		int remaining = m_voiceManager.instrument.loadNext();
 		updateStatusText(remaining);
 	}
 
@@ -224,9 +229,9 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 //-----------------------------------------------------------------------------
 void MySampler::updateStatusText(int remainingLoads)
 {
-	if(m_voiceManager.organData.isLoading())
+	if(m_voiceManager.instrument.isLoading())
 	{
-		unsigned int memoryUseMo = m_voiceManager.organData.getMemoryUse() / 1000000;
+		unsigned int memoryUseMo = m_voiceManager.instrument.getMemoryUse() / 1000000;
 		std::stringstream ss;
 		if(remainingLoads >= 0)
 			ss << "Loading samples (" << remainingLoads << ")... ";
@@ -242,8 +247,8 @@ void MySampler::Reset()
 {
 	TRACE;
 	IMutexLock lock(this);
-	Oscillator::setSampleRate(GetSampleRate());
-	EnvelopeGenerator::setSampleRate(GetSampleRate());
+	//Oscillator::setSampleRate(GetSampleRate());
+	//EnvelopeGenerator::setSampleRate(GetSampleRate());
 }
 
 //-----------------------------------------------------------------------------
@@ -253,33 +258,33 @@ void MySampler::OnParamChange(int paramIdx)
 
 	if(paramIdx >= kParamStopsBegin && paramIdx <= kParamStopsEnd)
 	{
-		unsigned int stopIndex = paramIdx - kParamStopsBegin;
-		if(stopIndex < m_organInfo.getStopCount())
+		unsigned int sectionIndex = paramIdx - kParamStopsBegin;
+		if(sectionIndex < m_instrumentInfo.sections.size())
 		{
 			bool active = GetParam(paramIdx)->Bool();
 
-			OrganData & organData = m_voiceManager.organData;
+			Instrument & instrument = m_voiceManager.instrument;
 
-			if(!organData.hasStop(stopIndex))
+			if(!instrument.hasSection(sectionIndex))
 			{
 				// Start loading if not already done
-				if(!organData.isLoadingStop(stopIndex))
+				if(!instrument.isLoadingSection(sectionIndex))
 				{
-					std::vector<OrganStopInfo> stops;
-					stops.push_back(m_organInfo.getStop(stopIndex));
+					std::vector<InstrumentSectionInfo> sections;
+					sections.push_back(m_instrumentInfo.sections[sectionIndex]);
 
-					std::string organPath = m_organInfo.getFilePath();
-					std::string organDir = organPath.substr(0, organPath.rfind('/'));
-					organData.loadStopsData(organDir, stops);
+					std::string instrumentPath = m_instrumentInfo.filePath;
+					std::string instrumentDir = instrumentPath.substr(0, instrumentPath.rfind('/'));
+					instrument.loadSectionsData(instrumentDir, sections);
 				}
 			}
 
-			if(organData.hasStop(stopIndex))
+			if(instrument.hasSection(sectionIndex))
 			{
 				// Set active flag
 				// Note: stopData should always exist because it is created above
-				OrganStopData & stopData = organData.getStop(stopIndex);
-				stopData.enabled = active;
+				InstrumentSection & section = instrument.getSection(sectionIndex);
+				section.enabled = active;
 			}
 		}
 	}
@@ -290,7 +295,7 @@ void MySampler::OnParamChange(int paramIdx)
 		{
 			WDL_String str;
 			m_fileSelector->GetLastSelectedFileForPlug(&str);
-			LoadOrgan(str.Get());
+			LoadInstrument(str.Get());
 		}
 		break;
 

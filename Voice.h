@@ -1,8 +1,8 @@
 #ifndef __HEADER_VOICE__
 #define __HEADER_VOICE__
 
-#include "Oscillator.h"
-#include "EnvelopeGenerator.h"
+//#include "Oscillator.h"
+//#include "EnvelopeGenerator.h"
 #include "utility.h"
 #include "WaveFile.h"
 
@@ -33,6 +33,10 @@ public:
 	inline int getNoteNumber() const { return m_noteNumber; }
 
 private:
+
+	void nextSample_loop(double & out_l, double & out_r);
+	void nextSample_oneShot(double & out_l, double & out_r);
+
 	//inline void setFree()
 	//{
 	//	m_isActive = false;
@@ -50,6 +54,7 @@ private:
 	double m_loopAmount;
 	double m_releaseFactor;
 
+	bool m_loopable;
 };
 
 #endif // __HEADER_VOICE__

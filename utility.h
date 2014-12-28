@@ -1,6 +1,9 @@
 #ifndef __HEADER_UTILITY__
 #define __HEADER_UTILITY__
 
+#include <math.h>
+#include <string>
+
 template <typename T>
 inline T clamp(T x, const T min, const T max)
 {

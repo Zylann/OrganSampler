@@ -1,8 +1,6 @@
 #ifndef __HEADER_ORGAN_INFO__
 #define __HEADER_ORGAN_INFO__
 
-#include "WaveFile.h"
-
 #include <string>
 #include <vector>
 

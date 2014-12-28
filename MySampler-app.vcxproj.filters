@@ -10,6 +10,18 @@
     <Filter Include="app\ASIO_SDK">
       <UniqueIdentifier>{b91b9db4-5584-4959-a395-7394ba3cf5a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JsonBox">
+      <UniqueIdentifier>{b0e7458e-d838-4708-8cc8-7fdf24d02c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JsonBox\JsonBox">
+      <UniqueIdentifier>{d6fb0d27-3c37-467d-a05f-00ccef031833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GrandOrgue">
+      <UniqueIdentifier>{3d0f1948-3b9a-4c61-8b6b-30ab361963ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Signal">
+      <UniqueIdentifier>{4b366058-9f5e-440e-afe0-6012a03ccce0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h">
@@ -51,14 +63,54 @@
     <ClInclude Include="Oscillator.h" />
     <ClInclude Include="MIDIReceiver.h" />
     <ClInclude Include="EnvelopeGenerator.h" />
-    <ClInclude Include="GallantDelegate.h" />
-    <ClInclude Include="GallantSignal.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="Voice.h" />
     <ClInclude Include="VoiceManager.h" />
     <ClInclude Include="WaveFile.h" />
-    <ClInclude Include="OrganInfo.h" />
-    <ClInclude Include="OrganData.h" />
+    <ClInclude Include="InstrumentInfo.h" />
+    <ClInclude Include="JsonBox\JsonBox.h">
+      <Filter>JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Convert.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Escaper.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Grammar.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\IndentCanceller.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Indenter.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Object.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\OutputFilter.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\SolidusEscaper.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Value.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBox\JsonBox\Array.h">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClInclude>
+    <ClInclude Include="GrandOrgue\OrganInfo.h">
+      <Filter>GrandOrgue</Filter>
+    </ClInclude>
+    <ClInclude Include="Signal\GallantSignal.h">
+      <Filter>Signal</Filter>
+    </ClInclude>
+    <ClInclude Include="Signal\GallantDelegate.h">
+      <Filter>Signal</Filter>
+    </ClInclude>
+    <ClInclude Include="Instrument.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtAudio.cpp">
@@ -92,8 +144,35 @@
     <ClCompile Include="Voice.cpp" />
     <ClCompile Include="VoiceManager.cpp" />
     <ClCompile Include="WaveFile.cpp" />
-    <ClCompile Include="OrganInfo.cpp" />
-    <ClCompile Include="OrganData.cpp" />
+    <ClCompile Include="InstrumentInfo.cpp" />
+    <ClCompile Include="JsonBox\JsonBox\Escaper.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\IndentCanceller.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\Indenter.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\Object.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\SolidusEscaper.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\Value.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\Array.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBox\JsonBox\Convert.cpp">
+      <Filter>JsonBox\JsonBox</Filter>
+    </ClCompile>
+    <ClCompile Include="GrandOrgue\OrganInfo.cpp">
+      <Filter>GrandOrgue</Filter>
+    </ClCompile>
+    <ClCompile Include="Instrument.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MySampler.rc" />

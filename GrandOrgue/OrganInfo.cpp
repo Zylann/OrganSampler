@@ -1,5 +1,5 @@
 #include "OrganInfo.h"
-#include "utility.h"
+#include "../utility.h"
 #include <fstream>
 #include <map>
 #include <sstream>
@@ -45,6 +45,9 @@ void OrganInfo::clear()
 //-----------------------------------------------------------------------------
 bool OrganInfo::loadFromFile(const char * filePath)
 {
+	// TODO FIXME Keyboards of organs can have different sizes, however we don't know at which midi note they start!
+	// Currently, everything is set to start at zero...
+
 	clear();
 
 	m_filePath = filePath;

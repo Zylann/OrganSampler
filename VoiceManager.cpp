@@ -4,9 +4,7 @@
 //-----------------------------------------------------------------------------
 void VoiceManager::onNoteOn(int noteNumber, int velocity)
 {
-	int basedNoteNumber = noteNumber - 32;
-
-	std::vector<const WaveFile*> waves = organData.getNoteDatas(basedNoteNumber);
+	std::vector<const WaveFile*> waves = instrument.getNextNoteWaves(noteNumber, velocity);
 	for(unsigned int i = 0; i < waves.size(); ++i)
 	{
 		Voice* voice = findFreeVoice();

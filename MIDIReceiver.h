@@ -6,7 +6,7 @@
 
 #include <math.h>
 
-#include "GallantSignal.h"
+#include "Signal/GallantSignal.h"
 using Gallant::Signal2;
 
 class MIDIReceiver

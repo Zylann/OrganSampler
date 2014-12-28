@@ -1,7 +1,7 @@
 #ifndef __HEADER_ENVELOPE_GENERATOR__
 #define __HEADER_ENVELOPE_GENERATOR__
 
-#include "GallantSignal.h"
+#include "Signal/GallantSignal.h"
 using Gallant::Signal0;
 
 class EnvelopeGenerator

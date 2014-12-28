@@ -9,7 +9,18 @@ void Voice::nextSample(double & out_l, double & out_r)
 	if (!m_isActive)
 		return;
 
+	if(m_loopable)
+		nextSample_loop(out_l, out_r);
+	else
+		nextSample_oneShot(out_l, out_r);
+}
+
+//-----------------------------------------------------------------------------
+void Voice::nextSample_loop(double & out_l, double & out_r)
+{
 	unsigned int loopDataPos = m_loopPos * 2;
+
+	// TODO Support mono sounds here too
 
 	if(loopDataPos < m_wave->size())
 	{
@@ -55,12 +66,28 @@ void Voice::nextSample(double & out_l, double & out_r)
 	{
 		m_isActive = false;
 	}
+}
 
-	//double oscillatorOutput = m_oscillator.nextSample();
-	//
-	//double volumeEnvelopeValue = m_volumeEnvelope.nextSample();
+//-----------------------------------------------------------------------------
+void Voice::nextSample_oneShot(double & out_l, double & out_r)
+{
+	unsigned int channelCount = m_wave->getChannelCount();
+	unsigned int dataPos = m_releasePos * channelCount;
 
-	//return oscillatorOutput * volumeEnvelopeValue;
+	if(dataPos < m_wave->size())
+	{
+		double rel_l = m_wave->getAsDouble(dataPos) * m_velocity;
+		double rel_r = channelCount == 1 ? rel_l : m_wave->getAsDouble(dataPos+1) * m_velocity;
+		++m_releasePos;
+		out_l = rel_l;
+		out_r = rel_r;
+	}
+	else
+	{
+		out_l = 0;
+		out_r = 0;
+		m_isActive = false;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -73,6 +100,7 @@ void Voice::reset()
 	m_isActive = false;
 	m_isReleasing = false;
 	m_loopPos = 0;
+	m_loopable = false;
 	//m_oscillator.reset();
 	//m_volumeEnvelope.reset();
 }
@@ -87,6 +115,7 @@ void Voice::noteOn(int noteNumber, const WaveFile * wave, int velocity)
 	m_velocity = static_cast<double>(velocity) / 127.0;
 	m_isActive = true;
 	m_loopAmount = 1.0;
+	m_loopable = wave->getSampleInfo().loops.size() > 0;
 
 	m_releaseFactor = calcExponentialDecreaseFactor(1.0, 0.001, 44100/2 /* arbitrary */);
 
@@ -100,15 +129,18 @@ void Voice::noteOff()
 {
 	if(!m_isReleasing)
 	{
-		//unsigned int releasePos = m_wave->getCues()[0].position;
-		unsigned int releasePos = m_wave->getSampleInfo().loops[0].loopEnd;
-		if(!m_wave->getCues().empty())
+		if(m_loopable)
 		{
-			releasePos = m_wave->getCues()[0].position;
+			//unsigned int releasePos = m_wave->getCues()[0].position;
+			unsigned int releasePos = m_wave->getSampleInfo().loops[0].loopEnd;
+			if(!m_wave->getCues().empty())
+			{
+				releasePos = m_wave->getCues()[0].position;
+			}
+			m_releasePos = releasePos;
+			m_isReleasing = true;
+			m_loopAmount = 1.0;
 		}
-		m_releasePos = releasePos;
-		m_isReleasing = true;
-		m_loopAmount = 1.0;
 	}
 
 	//m_playbackPos = 
