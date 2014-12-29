@@ -31,11 +31,11 @@ void Voice::nextSample_loop(double & out_l, double & out_r)
 		double out_l_before = out_l;
 		double out_r_before = out_r;
 
-		const WaveSampleInfo & sampleInfo = m_wave->getSampleInfo();
-		const WaveSampleLoop & loop = sampleInfo.loops[0];
-		if(m_loopPos == loop.loopEnd)
+		const SoundMetadata & sampleInfo = m_wave->metadata;
+		const SoundMetadata::Loop & loop = sampleInfo.loops[0];
+		if(m_loopPos == loop.end)
 		{
-			m_loopPos = loop.loopStart;
+			m_loopPos = loop.begin;
 		}
 
 		if(m_isReleasing)
@@ -106,7 +106,7 @@ void Voice::reset()
 }
 
 //-----------------------------------------------------------------------------
-void Voice::noteOn(int noteNumber, const WaveFile * wave, int velocity)
+void Voice::noteOn(int noteNumber, const SoundBuffer * wave, int velocity)
 {
 	reset();
 
@@ -115,7 +115,7 @@ void Voice::noteOn(int noteNumber, const WaveFile * wave, int velocity)
 	m_velocity = static_cast<double>(velocity) / 127.0;
 	m_isActive = true;
 	m_loopAmount = 1.0;
-	m_loopable = wave->getSampleInfo().loops.size() > 0;
+	m_loopable = wave->metadata.loops.size() > 0;
 
 	m_releaseFactor = calcExponentialDecreaseFactor(1.0, 0.001, 44100/2 /* arbitrary */);
 
@@ -132,10 +132,10 @@ void Voice::noteOff()
 		if(m_loopable)
 		{
 			//unsigned int releasePos = m_wave->getCues()[0].position;
-			unsigned int releasePos = m_wave->getSampleInfo().loops[0].loopEnd;
-			if(!m_wave->getCues().empty())
+			unsigned int releasePos = m_wave->metadata.loops[0].end;
+			if(!m_wave->metadata.cues.empty())
 			{
-				releasePos = m_wave->getCues()[0].position;
+				releasePos = m_wave->metadata.cues[0].position;
 			}
 			m_releasePos = releasePos;
 			m_isReleasing = true;

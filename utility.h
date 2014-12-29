@@ -79,6 +79,12 @@ inline std::string replace(const std::string & str, char c, char newC)
 	return s;
 }
 
+inline void toLower(std::string & str)
+{
+    for (unsigned int i = 0; i < str.size(); i++)
+        str[i] = tolower(str[i]);
+}
+
 
 #endif // __HEADER_UTILITY__
 

@@ -49,7 +49,7 @@ InstrumentNote::PolyphonicSound & InstrumentNote::getSoundForVelocity(int veloci
 }
 
 //-----------------------------------------------------------------------------
-WaveFile * InstrumentNote::getNextWave(int velocity)
+SoundBuffer * InstrumentNote::getNextWave(int velocity)
 {
 	if(sounds.empty())
 		return NULL;
@@ -155,9 +155,12 @@ int Instrument::loadNext()
 
 	std::vector<InstrumentNote> & notes = m_sections[e.sectionID]->m_notes;
 
-	WaveFile * wave = new WaveFile();
-	if(wave->loadFromFile(e.filePath.c_str()))
+	SoundBuffer * wave = new SoundBuffer();
+	
+	try
 	{
+		wave->loadFromFile(e.filePath.c_str());
+
 		int noteNumber = e.noteNumber;
 
 		if(notes.size() <= noteNumber)
@@ -181,19 +184,19 @@ int Instrument::loadNext()
 		wave->multiply(e.amplitudeLevel);
 		sound.variants[e.variantIndex] = wave;
 	}
-	else
+	catch(std::string errorMsg)
 	{
 		delete wave;
-		return -1;
+		throw errorMsg;
 	}
 
 	return m_loadQueue.size();
 }
 
 //-----------------------------------------------------------------------------
-std::vector<const WaveFile*> Instrument::getNextNoteWaves(int noteNumber, int velocity) const
+std::vector<const SoundBuffer*> Instrument::getNextNoteWaves(int noteNumber, int velocity) const
 {
-	std::vector<const WaveFile*> notes;
+	std::vector<const SoundBuffer*> notes;
 
 	if(noteNumber < 0)
 		return notes;
@@ -206,7 +209,7 @@ std::vector<const WaveFile*> Instrument::getNextNoteWaves(int noteNumber, int ve
 			if(section.enabled && section.hasNote(noteNumber))
 			{
 				InstrumentNote & note = section.m_notes[noteNumber];
-				WaveFile * wave = note.getNextWave(velocity);
+				SoundBuffer * wave = note.getNextWave(velocity);
 				if(wave)
 					notes.push_back(wave);
 			}

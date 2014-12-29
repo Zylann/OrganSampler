@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sstream>
 
-#include "WaveFile.h"
+//#include "Sound/SoundBuffer.h"
 #include "InstrumentInfo.h"
 
 const int kNumPrograms = 4;
@@ -208,8 +208,15 @@ void MySampler::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	// Update data loading
 	if(m_voiceManager.instrument.isLoading())
 	{
-		int remaining = m_voiceManager.instrument.loadNext();
-		updateStatusText(remaining);
+		try
+		{
+			int remaining = m_voiceManager.instrument.loadNext();
+			updateStatusText(remaining);
+		}
+		catch(std::string errorMsg)
+		{
+			Print("Error: " + errorMsg);
+		}
 	}
 
 	double *leftOutput = outputs[0];

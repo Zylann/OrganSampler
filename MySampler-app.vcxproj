@@ -290,10 +290,12 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Signal\GallantDelegate.h" />
     <ClInclude Include="Signal\GallantSignal.h" />
+    <ClInclude Include="Sound\SoundBuffer.h" />
+    <ClInclude Include="Sound\SoundMetadata.h" />
+    <ClInclude Include="Sound\WaveFile.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="Voice.h" />
     <ClInclude Include="VoiceManager.h" />
-    <ClInclude Include="WaveFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ASIO_SDK\asio.cpp" />
@@ -319,9 +321,10 @@
     <ClCompile Include="MIDIReceiver.cpp" />
     <ClCompile Include="Oscillator.cpp" />
     <ClCompile Include="MySampler.cpp" />
+    <ClCompile Include="Sound\SoundBuffer.cpp" />
+    <ClCompile Include="Sound\WaveFile.cpp" />
     <ClCompile Include="Voice.cpp" />
     <ClCompile Include="VoiceManager.cpp" />
-    <ClCompile Include="WaveFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MySampler.rc" />

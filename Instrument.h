@@ -2,7 +2,7 @@
 #define __HEADER_INSTRUMENT__
 
 #include "InstrumentInfo.h"
-#include "WaveFile.h"
+#include "Sound/SoundBuffer.h"
 
 //-----------------------------------------------------------------------------
 class InstrumentNote
@@ -11,7 +11,7 @@ public:
 	unsigned int getMemoryUse() const;
 	inline void clear();
 
-	WaveFile * getNextWave(int velocity);
+	SoundBuffer * getNextWave(int velocity);
 
 	struct PolyphonicSound
 	{
@@ -19,7 +19,7 @@ public:
 			lastPlayedVariant(0)
 		{}
 
-		std::vector<WaveFile*> variants;
+		std::vector<SoundBuffer*> variants;
 		unsigned int lastPlayedVariant;
 	};
 
@@ -75,7 +75,7 @@ public:
 	inline bool isLoading() const { return !m_loadQueue.empty(); }
 	bool isLoadingSection(unsigned int sectionID);
 
-	std::vector<const WaveFile*> getNextNoteWaves(int noteNumber, int velocity) const;
+	std::vector<const SoundBuffer*> getNextNoteWaves(int noteNumber, int velocity) const;
 
 	inline bool hasSection(unsigned int sectionID) const { return sectionID < m_sections.size() && m_sections[sectionID] != 0; }
 	inline InstrumentSection & getSection(unsigned int sectionID) { return *m_sections[sectionID]; }

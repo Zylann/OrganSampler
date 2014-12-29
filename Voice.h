@@ -4,7 +4,7 @@
 //#include "Oscillator.h"
 //#include "EnvelopeGenerator.h"
 #include "utility.h"
-#include "WaveFile.h"
+#include "Sound/SoundBuffer.h"
 
 class Voice
 {
@@ -26,7 +26,7 @@ public:
 	void nextSample(double & out_l, double & out_r);
 	void reset();
 
-	void noteOn(int noteNumber, const WaveFile * wave, int velocity);
+	void noteOn(int noteNumber, const SoundBuffer * wave, int velocity);
 	void noteOff();
 
 	inline bool isActive() const { return m_isActive; }
@@ -45,7 +45,7 @@ private:
 	//Oscillator m_oscillator;
 	//EnvelopeGenerator m_volumeEnvelope;
 	int m_noteNumber;
-	const WaveFile * m_wave;
+	const SoundBuffer * m_wave;
     double m_velocity;
 	bool m_isActive;
 	bool m_isReleasing;

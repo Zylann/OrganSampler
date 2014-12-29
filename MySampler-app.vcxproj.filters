@@ -22,6 +22,9 @@
     <Filter Include="Signal">
       <UniqueIdentifier>{4b366058-9f5e-440e-afe0-6012a03ccce0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{f2aee418-c827-44a5-b2ab-1048bc44015e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h">
@@ -66,7 +69,6 @@
     <ClInclude Include="utility.h" />
     <ClInclude Include="Voice.h" />
     <ClInclude Include="VoiceManager.h" />
-    <ClInclude Include="WaveFile.h" />
     <ClInclude Include="InstrumentInfo.h" />
     <ClInclude Include="JsonBox\JsonBox.h">
       <Filter>JsonBox</Filter>
@@ -111,6 +113,15 @@
       <Filter>Signal</Filter>
     </ClInclude>
     <ClInclude Include="Instrument.h" />
+    <ClInclude Include="Sound\SoundBuffer.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SoundMetadata.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\WaveFile.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtAudio.cpp">
@@ -143,7 +154,6 @@
     <ClCompile Include="EnvelopeGenerator.cpp" />
     <ClCompile Include="Voice.cpp" />
     <ClCompile Include="VoiceManager.cpp" />
-    <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="InstrumentInfo.cpp" />
     <ClCompile Include="JsonBox\JsonBox\Escaper.cpp">
       <Filter>JsonBox\JsonBox</Filter>
@@ -173,6 +183,12 @@
       <Filter>GrandOrgue</Filter>
     </ClCompile>
     <ClCompile Include="Instrument.cpp" />
+    <ClCompile Include="Sound\SoundBuffer.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\WaveFile.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MySampler.rc" />

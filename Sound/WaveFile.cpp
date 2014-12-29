@@ -1,6 +1,6 @@
 #include "WaveFile.h"
 #include <fstream>
-#include "utility.h"
+#include "../utility.h"
 
 
 //-----------------------------------------------------------------------------
@@ -10,6 +10,17 @@ T readData(std::istream & is)
 	T i = 0;
 	is.read(reinterpret_cast<char*>(&i), sizeof(T));
 	return i;
+}
+
+//-----------------------------------------------------------------------------
+void WaveFile::clear()
+{
+	if(m_samples)
+		delete[] m_samples;
+	m_samples = 0;
+	m_size = 0;
+	m_sampleRate = 0;
+	m_channelCount = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -201,34 +212,4 @@ bool WaveFile::loadFromFile(const char * filePath)
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-void WaveFile::add(const WaveFile & other)
-{
-	unsigned int len = std::min(m_size, other.m_size);
-	short * dst = m_samples;
-	short * src = other.m_samples;
-	for(unsigned int i = 0; i < len; ++i, ++dst, ++src)
-	{
-		int sum = *dst + *src;
-		sum = clamp(sum, SHRT_MIN, SHRT_MAX);
-		*dst = static_cast<short>(sum);
-	}
-}
-
-//-----------------------------------------------------------------------------
-void WaveFile::multiply(double k)
-{
-	for(unsigned int i = 0; i < m_size; ++i)
-	{
-		double s = m_samples[i];
-		s = clamp(s, -MAX_SHORT_D, MAX_SHORT_D);
-		m_samples[i] = static_cast<short>(s);
-	}
-}
-
-//-----------------------------------------------------------------------------
-unsigned int WaveFile::getMemoryUse() const
-{
-	return m_size * sizeof(short) + m_cues.size() * sizeof(WaveCue) + sizeof(m_sampleInfo);
-}
 

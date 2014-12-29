@@ -74,33 +74,16 @@ public:
 	}
 
 	bool loadFromFile(const char * filePath);
-
-	void clear()
-	{
-		if(m_samples)
-			delete[] m_samples;
-		m_samples = 0;
-	}
+	void clear();
 
 	inline unsigned int size() const { return m_size; }
 	inline short operator[](unsigned int i) const { return m_samples[i]; }
-
-	inline double getAsDouble(unsigned int i) const { return static_cast<double>(m_samples[i]) / MAX_SHORT_D; }
-	//{
-	//	short s = m_samples[i];
-	//	return static_cast<double>(s) / 16384.0;
-	//}
+	inline const short * getSamplesPtr() const { return m_samples; }
 
 	inline unsigned int getChannelCount() const { return m_channelCount; }
 	inline unsigned int getSampleRate() const { return m_sampleRate; }
 	inline const WaveSampleInfo & getSampleInfo() const { return m_sampleInfo; }
-
 	inline const std::vector<WaveCue> & getCues() const { return m_cues; }
-
-	void add(const WaveFile & other);
-	void multiply(double k);
-
-	unsigned int getMemoryUse() const;
 
 private:
 	short * m_samples;
