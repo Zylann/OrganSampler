@@ -113,7 +113,7 @@ bool OrganInfo::loadFromFile(const char * filePath)
 			for(Section::iterator it2 = section.begin(); it2 != section.end(); ++it2)
 			{
 				size_t findPos = it2->first.find("Pipe");
-				if(findPos != std::string::npos)
+				if(findPos != std::string::npos && findPos == 0)
 				{
 					std::string path = it2->second;
 					normalizePath(path);
